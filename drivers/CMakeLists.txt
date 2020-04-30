@@ -16,16 +16,13 @@ find_package(
 
 set(
     DRIVERS_SRC
-    #tcpsocket.cpp
-    #hmp4040_driver.cpp
+    comlinedevice.cpp
 )
 
 set(
     DRIVERS_H
-    #psuinterface.h
-    #tcpsocketinterface.h
-    #tcpsocket.h
-    #hmp4040_driver.h
+    externaldevice.h
+    comlinedevice.h
 )
 
 qt5_wrap_cpp(DRIVERS_QT_HEADERS_MOC ${DRIVERS_H})

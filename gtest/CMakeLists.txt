@@ -14,7 +14,7 @@ find_package(
     Widgets
 )
 
-set(TEST_PROGRAM powersupplypanel_test)
+set(TEST_PROGRAM pressure-regulator-panel_test)
 set(TEST_SRC main_test.cpp)
 
 include_directories(
@@ -43,4 +43,4 @@ target_link_libraries(
     Qt5::Widgets
 )
 
-add_test(NAME Psu_Test COMMAND ${TEST_PROGRAM})
+add_test(NAME PRP_Test COMMAND ${TEST_PROGRAM})
