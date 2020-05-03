@@ -6,10 +6,11 @@ class ExternalDevice
 {
 public:
     virtual ~ExternalDevice() {}
-    virtual bool connect(const QString &address, int port) = 0;
+    virtual bool connect(const QString &address) = 0;
     virtual void close() = 0;
     virtual bool write(const QString &message) = 0;
-    virtual bool read(QString &message) = 0;
+    virtual bool write(const QChar &token) = 0;
+    virtual QString read() = 0;
 };
 
 #endif // EXTERNALDEVICE_H

@@ -1,145 +1,98 @@
 #include "regtronic_driver.h"
-#include <QString>
-#define REGTRONIC_BAUD 2400
-#define MAX_PRESSURE 99999
-#define UPDATE_FREQ 500
-#define MAX_SAMPLING_INTERVAL 9999999 // Find QTimer limit
-#define MIN_SAMPLING_INTERVAL 100 // Find regtronic regulator limit
+#include <QMutexLocker>
 
-RegtronicDriver::RegtronicDriver(QTextStream *out) :
-    m_out(out),
-    isRunning(false)
+RegtronicDriver::RegtronicDriver(std::shared_ptr<ExternalDevice> device)
+    : m_device(device)
+    , m_pressure(0)
 {
 }
 
-RegtronicDriver::~RegtronicDriver() try
+RegtronicDriver::~RegtronicDriver()
 {
-    //device.Close();
-} catch (...) { }
+    exitEventLoop();
+}
 
-bool RegtronicDriver::start(QString address)
+bool RegtronicDriver::open(const QString &address)
 {
-    //return true;
-    if (isRunning) {
-        return true;
-    } else {
-        isRunning = open(address);
-        return isRunning;
+    if (!exitEventLoop()) {
+        emit error(QString("RegtronicDriver::open(%0) - Couldn't stop current thread").arg(address));
     }
+    m_address = address;
+    return startEventLoop();
 }
 
-bool RegtronicDriver::open(QString address) try
+void RegtronicDriver::setPressure(float bar)
 {
-    //device.Open(address.toLatin1().data(), REGTRONIC_BAUD, true); // What happens if i set _server = true
-    //device.Close();
-    return isReady();
-} catch (...) {
-    //*m_out << QString("Regtronic was not found on the given address");
-    return false;
-}
-
-bool RegtronicDriver::isReady() try
-{
-//    *m_out << "in isReady--------";
-//    bool is_rdy = false;
-//    if (device.Opened()) {
-//        *m_out << "device is opened??--------";
-//        is_rdy = true;
-//    } else {
-//        *m_out << QString("Regtronic communication is closed");
-//    }
-    //return is_rdy;
-    return false; // Temp
-} catch (...) {
-    //*m_out << QString("Regtronic is not connected");
-    return false;
-}
-
-void RegtronicDriver::setPressure(int setpoint) try
-{
-    if (isRunning) {
-        //device.Write(&ASCII::ESC, sizeof(unsigned char)); // Prepare device to receive command
-        //device.Write(&ASCII::P, sizeof(unsigned char)); // Specify command type
-        writeNumber(setpoint, Pressure::BYTE_RANGE);
-    }
-
-} catch (...) {
-    //*m_out << QString("Rare exception while setPressure! setpoint:%1;isRunning:%2").arg(setpoint).arg(isRunning);
-}
-
-bool RegtronicDriver::getPressure(int &out) try
-{
-    //device.Write(&ASCII::ESC, sizeof(unsigned char));
-    //device.Write(&ASCII::i, sizeof(unsigned char));
-    unsigned char input = '0';
-    while (input != ASCII::i) { // Implement watchdog condition
-        //*m_out << "reading like a mad man";
-        //input = device.NextByte();
-    }
-    int pressure = 0;
-    int power_factor = 10000;
-    for (int i = Pressure::BYTE_RANGE; 0 < i; --i) {
-        //input = device.NextByte();
-        int digit = input - '0';
-        if (digit < 0 || 9 < digit) {
-            //*m_out << QString("Error while reading pressure! Got %1 as the digit in byte position %2...").arg(digit).arg(i);
+    enqueue([&, bar]{
+        if (!m_device->write(QChar(0b0011011))) { // ASCII BIN CODE FOR ESC
             return false;
         }
-        pressure += digit * power_factor;
-        power_factor /= 10;
-    }
-    out = pressure;
-    return true;
-} catch (...) {
-    //*m_out << QString("Exception while reading pressure");
-    out = 0;
-    return false;
+        if (!m_device->write('P')) { // lower?
+            return false;
+        }
+        if (!m_device->write(QString::number(bar))) { // works for float too?
+            return false;
+        }
+        return true;
+    });
 }
 
-void RegtronicDriver::writeNumber(int number, int bytes) try
+float RegtronicDriver::pressure()
 {
-    if (bytes < 1) {
+    QMutexLocker lock(&m_mutex);
+    return m_pressure;
+}
+
+void RegtronicDriver::run()
+{
+    QMutexLocker lock(&m_mutex);
+    if (!m_device->connect(m_address)) {
         return;
     }
-    int divisor = 1;
-    for (int i = 0; i < (bytes - 1); ++i) {
-        divisor *= 10;
+    while (!m_events.empty()) {
+        auto event = m_events.dequeue();
+        m_mutex.unlock();
+        auto delivered = event();
+        m_mutex.lock();
+        if (!delivered) {
+            m_events.enqueue(event);
+        }
     }
-    unsigned char digit;
-    switch ((int) (number / divisor) % 10) {
-    case 0 :
-        digit = ASCII::c0;
-        break;
-    case 1 :
-        digit = ASCII::c1;
-        break;
-    case 2 :
-        digit = ASCII::c2;
-        break;
-    case 3 :
-        digit = ASCII::c3;
-        break;
-    case 4 :
-        digit = ASCII::c4;
-        break;
-    case 5 :
-        digit = ASCII::c5;
-        break;
-    case 6 :
-        digit = ASCII::c6;
-        break;
-    case 7 :
-        digit = ASCII::c7;
-        break;
-    case 8 :
-        digit = ASCII::c8;
-        break;
-    case 9 :
-        digit = ASCII::c9;
-        break;
-    }
-    //device.Write(&digit, sizeof(unsigned char));
-    writeNumber(number, bytes - 1);
-} catch (...) {
-    //*m_out << QString("Exception while writing value to Regtronic");
+    m_device->close();
+}
+
+bool RegtronicDriver::startEventLoop()
+{
+    enqueue([&]{
+        if (!m_device->write(QChar(0b0011011))) { // ASCII BIN CODE FOR ESC
+            return false;
+        }
+        if (!m_device->write('i')) { // Upper?
+            return false;
+        }
+        bool converted;
+        auto data = m_device->read().toFloat(&converted);
+        if (converted) {
+            QMutexLocker lock(&m_mutex);
+            m_pressure = data;
+        }
+        return converted;
+    });
+
+    start();
+    return isRunning();
+}
+
+bool RegtronicDriver::exitEventLoop()
+{
+    m_mutex.lock();
+    m_events.clear();
+    m_mutex.unlock();
+    return wait();
+}
+
+void RegtronicDriver::enqueue(std::function<bool()> event)
+{
+    QMutexLocker lock(&m_mutex);
+    m_events.enqueue(event);
 }

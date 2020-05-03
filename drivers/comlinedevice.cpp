@@ -6,7 +6,7 @@ ComlineDevice::ComlineDevice()
 {
 }
 
-bool ComlineDevice::connect(const QString &address, int port)
+bool ComlineDevice::connect(const QString &address)
 {
     //m_device.Open(address.toLatin1().data(), m_baudRate, true);
     //return m_device.Opened();
@@ -26,15 +26,20 @@ bool ComlineDevice::write(const QString &message)
     return true;
 }
 
-bool ComlineDevice::read(QString &message)
+bool ComlineDevice::write(const QChar &token)
 {
-    message.clear();
+    //m_device.Write(&token, sizeof(QChar));
+}
+
+QString ComlineDevice::read()
+{
+    QString message;
     unsigned char input = '0';
     do {
         //input = device.NextByte();
         message.append(QChar(input));
     } while (input != '0');
-    return !message.isEmpty();
+    return message;
 }
 
 void ComlineDevice::setBaud(const int rate)

@@ -17,12 +17,16 @@ find_package(
 set(
     DRIVERS_SRC
     comlinedevice.cpp
+    regtronic_driver.cpp
 )
 
 set(
     DRIVERS_H
     externaldevice.h
+    ipressureregulator.h
+
     comlinedevice.h
+    regtronic_driver.h
 )
 
 qt5_wrap_cpp(DRIVERS_QT_HEADERS_MOC ${DRIVERS_H})

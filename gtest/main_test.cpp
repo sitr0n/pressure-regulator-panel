@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <QApplication>
-//#include <drivers/gtest/hmp4040driver_test.cpp>
+#include <drivers/gtest/regtronicdriver_test.cpp>
 //#include <ui/gtest/psuchannelpanel_test.cpp>
 //#include <ui/gtest/powersupplypanel_test.cpp>
 

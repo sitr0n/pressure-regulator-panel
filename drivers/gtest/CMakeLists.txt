@@ -15,13 +15,13 @@ find_package(
 
 set(
     DRIVERS_GTEST_SRC
-    #hmp4040driver_test.cpp
+    regtronicdriver_test.cpp
 )
 
 set(
     DRIVERS_GMOCK_H
-    #mocktcpsocket.h
-    #mockpsuinterface.h
+    mockexternaldevice.h
+    mockipressureregulator.h
 )
 
 include_directories(

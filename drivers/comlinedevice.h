@@ -9,10 +9,11 @@ class ComlineDevice : public ExternalDevice
 {
 public:
     ComlineDevice();
-    bool connect(const QString &address, int port);
+    bool connect(const QString &address);
     void close();
     bool write(const QString &message);
-    bool read(QString &message);
+    bool write(const QChar &token);
+    QString read();
 
     void setBaud(const int rate);
 

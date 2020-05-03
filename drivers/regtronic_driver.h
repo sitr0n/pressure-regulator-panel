@@ -1,17 +1,12 @@
 #ifndef REGTRONICDRIVER_H
 #define REGTRONICDRIVER_H
-
-//#include "commline.h"
-#include <QObject>
-#include <QTextStream>
-
-namespace Ui {
-class PressureControl;
-}
-
-namespace Pressure {
-const int BYTE_RANGE = 5;
-}
+#include "externaldevice.h"
+#include "ipressureregulator.h"
+#include <QThread>
+#include <QQueue>
+#include <memory>
+#include <QMutex>
+#include <functional>
 
 namespace ASCII {
 const unsigned char ESC = 0x1B;
@@ -36,26 +31,34 @@ const unsigned char c8 = 0x38;
 const unsigned char c9 = 0x39;
 }
 
-class RegtronicDriver
+class RegtronicDriver : public QThread, public IPressureRegulator
 {
-
+    Q_OBJECT
 public:
-    RegtronicDriver(QTextStream *out);
+    RegtronicDriver(std::shared_ptr<ExternalDevice> device);
     ~RegtronicDriver();
-    bool start(QString address);
-    void setPressure(int setpoint);
-    bool getPressure(int &out);
+    bool open(const QString &address);
 
-    //Implement restart function for when address has changed while running..
+    void setPressure(float bar);
+    float pressure();
+
+signals:
+    void error(const QString &message);
+
+protected:
+    virtual void run() override;
+    bool startEventLoop();
+    bool exitEventLoop();
+    void enqueue(std::function<bool()> event);
 
 private:
-    //CommLine device;
-    QTextStream *m_out;
+    std::shared_ptr<ExternalDevice> m_device;
+    float m_pressure;
 
-    bool open(QString address);
-    bool isReady();
-    void writeNumber(int number, int bytes);
-    bool isRunning;
+    QQueue<std::function<bool()>> m_events;
+    QMutex m_mutex;
+
+    QString m_address;
 };
 
 #endif // REGTRONICDRIVER_H
