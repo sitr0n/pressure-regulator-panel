@@ -24,16 +24,7 @@ bool RegtronicDriver::open(const QString &address)
 void RegtronicDriver::setPressure(float bar)
 {
     enqueue([&, bar]{
-        if (!m_device->write(QChar(0b0011011))) { // ASCII BIN CODE FOR ESC
-            return false;
-        }
-        if (!m_device->write('P')) { // lower?
-            return false;
-        }
-        if (!m_device->write(QString::number(bar))) { // works for float too?
-            return false;
-        }
-        return true;
+        return (m_device->write(QString(ASCII::ESC)) && m_device->write(QString(ASCII::P)) && m_device->write(QString::number(bar)));
     });
 }
 
@@ -63,21 +54,23 @@ void RegtronicDriver::run()
 
 bool RegtronicDriver::startEventLoop()
 {
-    enqueue([&]{
-        if (!m_device->write(QChar(0b0011011))) { // ASCII BIN CODE FOR ESC
-            return false;
-        }
-        if (!m_device->write('i')) { // Upper?
-            return false;
-        }
-        bool converted;
-        auto data = m_device->read().toFloat(&converted);
-        if (converted) {
+    for (const auto& times : {1, 2}) { // Event loop needs at least two events running to work as it stands right now
+        enqueue([&]{
+            if (!m_device->write(QString(ASCII::ESC))) { // Ascii symbol for ESC - Signals the start of a command
+                return m_events.empty();
+            }
+            if (!m_device->write(QString(ASCII::i))) { // Upper?
+                return m_events.empty();
+            }
+            bool converted;
+            auto data = m_device->read().toFloat(&converted);
             QMutexLocker lock(&m_mutex);
-            m_pressure = data;
-        }
-        return converted;
-    });
+            if (converted) {
+                m_pressure = data;
+            }
+            return m_events.empty();
+        });
+    }
 
     start();
     return isRunning();

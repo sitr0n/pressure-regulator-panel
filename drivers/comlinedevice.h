@@ -12,7 +12,6 @@ public:
     bool connect(const QString &address);
     void close();
     bool write(const QString &message);
-    bool write(const QChar &token);
     QString read();
 
     void setBaud(const int rate);

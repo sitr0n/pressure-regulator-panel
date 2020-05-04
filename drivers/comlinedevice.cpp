@@ -26,11 +26,6 @@ bool ComlineDevice::write(const QString &message)
     return true;
 }
 
-bool ComlineDevice::write(const QChar &token)
-{
-    //m_device.Write(&token, sizeof(QChar));
-}
-
 QString ComlineDevice::read()
 {
     QString message;

@@ -3,10 +3,10 @@
 #include "externaldevice.h"
 #include "ipressureregulator.h"
 #include <QThread>
-#include <QQueue>
 #include <memory>
-#include <QMutex>
+#include <QQueue>
 #include <functional>
+#include <QMutex>
 
 namespace ASCII {
 const unsigned char ESC = 0x1B;
@@ -19,16 +19,6 @@ const unsigned char e = 0x64;
 const unsigned char O = 0x4F;
 const unsigned char p = 0x70;
 const unsigned char i = 0x69;
-const unsigned char c0 = 0x30;
-const unsigned char c1 = 0x31;
-const unsigned char c2 = 0x32;
-const unsigned char c3 = 0x33;
-const unsigned char c4 = 0x34;
-const unsigned char c5 = 0x35;
-const unsigned char c6 = 0x36;
-const unsigned char c7 = 0x37;
-const unsigned char c8 = 0x38;
-const unsigned char c9 = 0x39;
 }
 
 class RegtronicDriver : public QThread, public IPressureRegulator
@@ -53,12 +43,10 @@ protected:
 
 private:
     std::shared_ptr<ExternalDevice> m_device;
-    float m_pressure;
-
     QQueue<std::function<bool()>> m_events;
     QMutex m_mutex;
-
     QString m_address;
+    float m_pressure;
 };
 
 #endif // REGTRONICDRIVER_H

@@ -20,8 +20,6 @@ TEST(RegtronicDriver, testOpen)
             .Times(1)
             .WillOnce(Return(true));
     EXPECT_CALL(*linker, close()).Times(1);
-
-
     EXPECT_TRUE(driver->open(address));
 }
 
@@ -37,18 +35,31 @@ TEST(RegtronicDriver, testSetPressure)
     EXPECT_CALL(*linker, read())
             .Times(AtLeast(1))
             .WillRepeatedly(Return(QString::number(bars)));
-    EXPECT_CALL(*linker, write(QChar(0b0011011)))
-            .Times(AtLeast(1))
-            .WillRepeatedly(Return(true));
-    EXPECT_CALL(*linker, write(QChar('P')))
-            .Times(AtLeast(1))
-            .WillRepeatedly(Return(true));
-    EXPECT_CALL(*linker, write(QString::number(bars)))
-            .Times(AtLeast(1))
-            .WillRepeatedly(Return(true));
+    EXPECT_CALL(*linker, write(_)).Times(AtLeast(1)).WillRepeatedly(Return(true));
     EXPECT_CALL(*linker, close()).Times(1);
 
     driver->open(address);
     driver->setPressure(bars);
     EXPECT_FALSE(driver->wait(threadDelay));
+}
+
+TEST(RegtronicDriver, testPressure)
+{
+    auto linker = std::make_shared<MockExternalDevice>();
+    auto driver = std::make_shared<RegtronicDriver>(linker);
+    const float bars = 3.0;
+
+    EXPECT_CALL(*linker, connect(address))
+            .Times(1)
+            .WillOnce(Return(true));
+    EXPECT_CALL(*linker, read())
+            .Times(AtLeast(1))
+            .WillRepeatedly(Return(QString::number(bars)));
+    EXPECT_CALL(*linker, write(_)).Times(AtLeast(1)).WillRepeatedly(Return(true));
+    EXPECT_CALL(*linker, close()).Times(1);
+
+    driver->open(address);
+    driver->setPressure(bars);
+    EXPECT_FALSE(driver->wait(threadDelay));
+    EXPECT_EQ(driver->pressure(), bars);
 }
