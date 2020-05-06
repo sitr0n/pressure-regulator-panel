@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8.12)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if (VERSION VERSION_GREATER_EQUAL 3.1)
-    set(CMAKE_CXX_STANDARD 11)
-else()
     add_compile_options(-std=c++11)
+else()
+    set(CMAKE_CXX_STANDARD 11)
 endif()
 
 find_package(
@@ -16,8 +16,7 @@ find_package(
 
 set(
     UI_GTEST_SRC
-   # powersupplypanel_test.cpp
-   # psuchannelpanel_test.cpp
+    pressurepanel_test.cpp
 )
 
 set(
@@ -37,6 +36,12 @@ add_library(
     ui_gtest
     ${UI_GTEST_SRC}
     ${UI_GMOCK_H}
+)
+
+target_compile_options(
+    ui_gtest
+    PRIVATE
+        -fno-sanitize=address
 )
 
 target_link_libraries(

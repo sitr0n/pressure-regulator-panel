@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 2.8.12)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if (VERSION VERSION_GREATER_EQUAL 3.1)
-    set(CMAKE_CXX_STANDARD 11)
-else()
     add_compile_options(-std=c++11)
+else()
+    set(CMAKE_CXX_STANDARD 11)
 endif()
 
 find_package(
@@ -16,18 +16,20 @@ find_package(
 
 set(
     UI_SRC
+    pressurepanel.cpp
 )
 
 set(
     UI_H
+    pressurepanel.h
 )
 
 qt5_wrap_cpp(UI_QT_HEADERS_MOC ${UI_H})
 
 include_directories(
-    #${CURRENT_SOURCE_DIR}/../
-    #${CURRENT_SOURCE_DIR}/../drivers
-    #${CURRENT_SOURCE_DIR}/../drivers/gtest
+    ${CURRENT_SOURCE_DIR}/../
+    ${CURRENT_SOURCE_DIR}/../drivers
+    ${CURRENT_SOURCE_DIR}/../drivers/gtest
 )
 
 add_library(
