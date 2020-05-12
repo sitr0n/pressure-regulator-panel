@@ -1,5 +1,6 @@
 add_subdirectory(drivers)
 add_subdirectory(gtest)
+add_subdirectory(lib)
 add_subdirectory(ui)
 
 cmake_minimum_required(VERSION 2.8.11)
@@ -9,6 +10,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5 REQUIRED Core Widgets Network)
 
 include_directories(${CURRENT_SOURCE_DIR}/drivers
+                    ${CURRENT_SOURCE_DIR}/lib
                     ${CURRENT_SOURCE_DIR}/ui
 )
 
@@ -16,6 +18,7 @@ add_executable(pressure-regulator-panel main.cpp)
 
 target_link_libraries(pressure-regulator-panel
                       drivers
+                      lib
                       ui
                       Qt5::Core
                       Qt5::Widgets

@@ -11,36 +11,27 @@ endif()
 find_package(
     Qt5 REQUIRED
     Core
-    Widgets
 )
 
 set(
-    UI_SRC
-    pressurepanel.cpp
+    LIB_SRC
+    presentationmodel.cpp
 )
 
 set(
-    UI_H
-    pressurepanel.h
+    LIB_H
+    presentationmodel.h
 )
 
-include_directories(
-    ${CURRENT_SOURCE_DIR}/../
-    ${CURRENT_SOURCE_DIR}/../drivers
-    ${CURRENT_SOURCE_DIR}/../drivers/gtest
-)
-
-qt5_wrap_cpp(UI_QT_HEADERS_MOC ${UI_H})
+qt5_wrap_cpp(LIB_QT_HEADERS_MOC ${LIB_H})
 
 add_library(
-    ui
-    ${UI_SRC}
-    ${UI_QT_HEADERS_MOC}
+    lib
+    ${LIB_SRC}
+    ${LIB_QT_HEADERS_MOC}
 )
 
 target_link_libraries(
-    ui
-    drivers
+    lib
     Qt5::Core
-    Qt5::Widgets
 )

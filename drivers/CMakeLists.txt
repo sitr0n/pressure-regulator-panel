@@ -22,12 +22,19 @@ set(
 
 set(
     DRIVERS_H
-    externaldevice.h
+    idatalink.h
     ipressureregulator.h
 
     comlinedevice.h
     regtronic_driver.h
 )
+
+include_directories(
+    ${CURRENT_SOURCE_DIR}/../
+    ${CURRENT_SOURCE_DIR}/../lib
+    ${CURRENT_SOURCE_DIR}/../lib/gtest
+)
+
 
 qt5_wrap_cpp(DRIVERS_QT_HEADERS_MOC ${DRIVERS_H})
 
@@ -39,6 +46,7 @@ add_library(
 
 target_link_libraries(
     drivers
+    lib
     Qt5::Core
     Qt5::Network
 )

@@ -1,7 +1,7 @@
 #include "comlinedevice.h"
 
 ComlineDevice::ComlineDevice()
-    : ExternalDevice()
+    : IDataLink()
     , m_baudRate(2400)
 {
 }
@@ -31,7 +31,7 @@ QString ComlineDevice::read()
     QString message;
     unsigned char input = '0';
     do {
-        //input = device.NextByte();
+        //input = m_device.NextByte();
         message.append(QChar(input));
     } while (input != '0');
     return message;

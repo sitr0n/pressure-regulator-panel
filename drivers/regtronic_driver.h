@@ -1,14 +1,12 @@
-#ifndef REGTRONICDRIVER_H
-#define REGTRONICDRIVER_H
-#include "externaldevice.h"
+#pragma once
+//#include "presentationmodel.h"
+#include "../lib/presentationmodel.h"
 #include "ipressureregulator.h"
-#include <QThread>
+#include "idatalink.h"
 #include <memory>
-#include <QQueue>
-#include <functional>
 #include <QMutex>
 
-namespace ASCII {
+namespace ASCII2 {
 const unsigned char ESC = 0x1B;
 const unsigned char P = 0x50;
 const unsigned char c = 0x63;
@@ -21,32 +19,25 @@ const unsigned char p = 0x70;
 const unsigned char i = 0x69;
 }
 
-class RegtronicDriver : public QThread, public IPressureRegulator
+class RegtronicDriver : public PresentationModel, public IPressureRegulator
 {
     Q_OBJECT
 public:
-    RegtronicDriver(std::shared_ptr<ExternalDevice> device);
-    ~RegtronicDriver();
+    explicit RegtronicDriver(std::shared_ptr<IDataLink> linker, QObject *parent = nullptr);
+    virtual ~RegtronicDriver();
     bool open(const QString &address);
+    bool close();
 
     void setPressure(float bar);
     float pressure();
 
-signals:
-    void error(const QString &message);
-
 protected:
-    virtual void run() override;
-    bool startEventLoop();
-    bool exitEventLoop();
-    void enqueue(std::function<bool()> event);
+    bool startModel();
 
 private:
-    std::shared_ptr<ExternalDevice> m_device;
-    QQueue<std::function<bool()>> m_events;
-    QMutex m_mutex;
+    std::shared_ptr<IDataLink> m_linker;
     QString m_address;
-    float m_pressure;
-};
+    QMutex m_mutex;
 
-#endif // REGTRONICDRIVER_H
+    float m_pressure{};
+};

@@ -1,11 +1,11 @@
 #ifndef COMLINEDEVICE_H
 #define COMLINEDEVICE_H
 
-#include "externaldevice.h"
+#include "idatalink.h"
 //#include "commline.h"
 #include <vector>
 
-class ComlineDevice : public ExternalDevice
+class ComlineDevice : public IDataLink
 {
 public:
     ComlineDevice();

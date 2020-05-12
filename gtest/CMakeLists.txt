@@ -8,7 +8,7 @@ if (VERSION VERSION_GREATER_EQUAL 3.1)
     # Qt/QPushButton creates a memory leak when one sets its button text
     # However, it is a convenient widget to have and you really don't need those kbytes anyway
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        add_compile_options(-fno-sanitize=address -fno-sanitize=leak)
+        add_compile_options(-fno-sanitize=address,leak)
     else()
         add_compile_options(-fsanitize-blacklist=sanitizer_blacklist.txt)
     endif()
@@ -16,7 +16,7 @@ else()
     set(CMAKE_CXX_STANDARD 11)
     set(MAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-sanitize=address -fno-sanitize=leak")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-sanitize=address,leak")
     else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize-blacklist=sanitizer_blacklist.txt")
     endif()
@@ -36,6 +36,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${CMAKE_CURRENT_SOURCE_DIR}/../drivers
     ${CMAKE_CURRENT_SOURCE_DIR}/../drivers/gtest
+    ${CMAKE_CURRENT_SOURCE_DIR}/../lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../lib/gtest
     ${CMAKE_CURRENT_SOURCE_DIR}/../ui
     ${CMAKE_CURRENT_SOURCE_DIR}/../ui/gtest
 )
@@ -51,6 +53,8 @@ target_link_libraries(
     gmock
     drivers
     drivers_gtest
+    lib
+    lib_gtest
     ui
     ui_gtest
     Qt5::Core

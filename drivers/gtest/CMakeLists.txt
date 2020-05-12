@@ -21,13 +21,26 @@ set(
 
 set(
     DRIVERS_GMOCK_H
-    mockexternaldevice.h
+    mockdatalink.h
     mockipressureregulator.h
 )
 
+#include_directories(
+#    ${CMAKE_CURRENT_SOURCE_DIR}/..
+#    ${CMAKE_SOURCE_DIR}/gtest
+#)
+
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/..
-    ${CMAKE_SOURCE_DIR}/gtest
+    ${CMAKE_CURRENT_SOURCE_DIR}..
+    ${CMAKE_CURRENT_SOURCE_DIR}drivers
+    ${CMAKE_CURRENT_SOURCE_DIR}drivers/gtest
+    ${CURRENT_SOURCE_DIR}../
+    ${CURRENT_SOURCE_DIR}../drivers
+    ${CURRENT_SOURCE_DIR}../drivers/gtest
+    ${CMAKE_CURRENT_SOURCE_DIR}lib
+    ${CMAKE_CURRENT_SOURCE_DIR}lib/gtest
+    ${CURRENT_SOURCE_DIR}../lib
+    ${CURRENT_SOURCE_DIR}../lib/gtest
 )
 
 add_library(
@@ -39,6 +52,8 @@ add_library(
 target_link_libraries(
     drivers_gtest
     drivers
+    lib_gtest
+    lib
     gtest_main
     gmock
     Qt5::Core
