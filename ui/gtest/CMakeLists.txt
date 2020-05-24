@@ -16,11 +16,16 @@ find_package(
 
 set(
     UI_GTEST_SRC
+    isettingswidget_test.cpp
+    settingstextfield_test.cpp
+    networkaddressform_test.cpp
+
     pressurepanel_test.cpp
 )
 
 set(
     UI_GMOCK_H
+    mocksettingswidget.h
 )
 
 include_directories(

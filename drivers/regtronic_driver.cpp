@@ -1,7 +1,7 @@
 #include "regtronic_driver.h"
 #include <QMutexLocker>
 
-RegtronicDriver::RegtronicDriver(std::shared_ptr<IDataLink> linker, QObject *parent)
+RegtronicDriver::RegtronicDriver(std::shared_ptr<IDataLink<QString>> linker, QObject *parent)
     : PresentationModel(parent)
     , m_linker(linker)
 {

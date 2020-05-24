@@ -15,40 +15,35 @@ find_package(
 )
 
 set(
-    DRIVERS_SRC
-    #comlinedevice.cpp
-    regtronic_driver.cpp
+    PERIPHERAL_SRC
+    comlinedevice.cpp
 )
 
 set(
-    DRIVERS_H
-    #idatalink.h
-    ipressureregulator.h
+    PERIPHERAL_H
+    qstorage.h
 
-    #comlinedevice.h
-    regtronic_driver.h
+    comlinedevice.h
 )
 
 include_directories(
     ${CURRENT_SOURCE_DIR}/../
     ${CURRENT_SOURCE_DIR}/../lib
     ${CURRENT_SOURCE_DIR}/../lib/gtest
-    ${CURRENT_SOURCE_DIR}/../peripheral
-    ${CURRENT_SOURCE_DIR}/../peripheral/gtest
 )
 
-qt5_wrap_cpp(DRIVERS_QT_HEADERS_MOC ${DRIVERS_H})
+
+qt5_wrap_cpp(PERIPHERAL_QT_HEADERS_MOC ${PERIPHERAL_H})
 
 add_library(
-    drivers
-    ${DRIVERS_SRC}
-    ${DRIVERS_QT_HEADERS_MOC}
+    peripheral
+    ${PERIPHERAL_SRC}
+    ${PERIPHERAL_QT_HEADERS_MOC}
 )
 
 target_link_libraries(
-    drivers
-    lib
     peripheral
+    lib
     Qt5::Core
     Qt5::Network
 )

@@ -2,7 +2,10 @@
 #include <QApplication>
 #include <drivers/gtest/regtronicdriver_test.cpp>
 #include <lib/gtest/presentationmodel_test.cpp>
+#include <peripheral/gtest/qstorage_test.cpp>
 #include <ui/gtest/pressurepanel_test.cpp>
+#include <ui/gtest/networkaddressform_test.cpp>
+#include <ui/gtest/isettingswidget_test.cpp>
 
 int main(int argc, char *argv[])
 {

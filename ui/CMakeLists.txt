@@ -16,11 +16,19 @@ find_package(
 
 set(
     UI_SRC
+    isettingswidget.cpp
+    settingstextfield.cpp
+    networkaddressform.cpp
+
     pressurepanel.cpp
 )
 
 set(
     UI_H
+    isettingswidget.h
+    settingstextfield.h
+    networkaddressform.h
+
     pressurepanel.h
 )
 

@@ -1,8 +1,9 @@
 #pragma once
 //#include "presentationmodel.h"
 #include "../lib/presentationmodel.h"
+#include "../peripheral/idatalink.h"
 #include "ipressureregulator.h"
-#include "idatalink.h"
+//#include "idatalink.h"
 #include <memory>
 #include <QMutex>
 
@@ -23,7 +24,7 @@ class RegtronicDriver : public PresentationModel, public IPressureRegulator
 {
     Q_OBJECT
 public:
-    explicit RegtronicDriver(std::shared_ptr<IDataLink> linker, QObject *parent = nullptr);
+    explicit RegtronicDriver(std::shared_ptr<IDataLink<QString>> linker, QObject *parent = nullptr);
     virtual ~RegtronicDriver();
     bool open(const QString &address);
     bool close();
@@ -35,7 +36,7 @@ protected:
     bool startModel();
 
 private:
-    std::shared_ptr<IDataLink> m_linker;
+    std::shared_ptr<IDataLink<QString>> m_linker;
     QString m_address;
     QMutex m_mutex;
 

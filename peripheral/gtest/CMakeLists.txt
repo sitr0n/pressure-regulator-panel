@@ -15,13 +15,20 @@ find_package(
 )
 
 set(
-    DRIVERS_GTEST_SRC
-    regtronicdriver_test.cpp
+    PERIPHERAL_GTEST_SRC
+    #regtronicdriver_test.cpp
+    qstorage_test.cpp
 )
 
 set(
-    DRIVERS_GMOCK_H
-    mockipressureregulator.h
+    PERIPHERAL_GMOCK_H
+    mockdatalink.h
+    #mockipressureregulator.h
+)
+
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_SOURCE_DIR}/gtest
 )
 
 include_directories(
@@ -31,29 +38,23 @@ include_directories(
     ${CURRENT_SOURCE_DIR}../
     ${CURRENT_SOURCE_DIR}../drivers
     ${CURRENT_SOURCE_DIR}../drivers/gtest
-    ${CMAKE_CURRENT_SOURCE_DIR}peripheral
-    ${CMAKE_CURRENT_SOURCE_DIR}peripheral/gtest
-    ${CURRENT_SOURCE_DIR}../peripheral
-    ${CURRENT_SOURCE_DIR}../peripheral/gtest
-    ${CMAKE_CURRENT_SOURCE_DIR}lib
-    ${CMAKE_CURRENT_SOURCE_DIR}lib/gtest
-    ${CURRENT_SOURCE_DIR}../lib
-    ${CURRENT_SOURCE_DIR}../lib/gtest
+    #${CMAKE_CURRENT_SOURCE_DIR}lib
+    #${CMAKE_CURRENT_SOURCE_DIR}lib/gtest
+    #${CURRENT_SOURCE_DIR}../lib
+    #${CURRENT_SOURCE_DIR}../lib/gtest
 )
 
 add_library(
-    drivers_gtest
-    ${DRIVERS_GTEST_SRC}
-    ${DRIVERS_GMOCK_H}
+    peripheral_gtest
+    ${PERIPHERAL_GTEST_SRC}
+    ${PERIPHERAL_GMOCK_H}
 )
 
 target_link_libraries(
-    drivers_gtest
-    drivers
-    lib_gtest
-    lib
     peripheral_gtest
     peripheral
+    #lib_gtest
+    #lib
     gtest_main
     gmock
     Qt5::Core

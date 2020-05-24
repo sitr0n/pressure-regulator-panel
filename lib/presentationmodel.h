@@ -27,8 +27,7 @@ public:
     }
 
 private:
-    std::function<bool()> m_process = nullptr;
-    std::function<void()> m_routine = nullptr;
+    std::function<bool()> m_process;
     std::function<bool()> m_condition;
     bool m_finished{false};
     bool m_repeating{false};

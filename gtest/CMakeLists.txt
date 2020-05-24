@@ -38,6 +38,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../drivers/gtest
     ${CMAKE_CURRENT_SOURCE_DIR}/../lib
     ${CMAKE_CURRENT_SOURCE_DIR}/../lib/gtest
+    ${CMAKE_CURRENT_SOURCE_DIR}/../peripheral
+    ${CMAKE_CURRENT_SOURCE_DIR}/../peripheral/gtest
     ${CMAKE_CURRENT_SOURCE_DIR}/../ui
     ${CMAKE_CURRENT_SOURCE_DIR}/../ui/gtest
 )
@@ -55,6 +57,8 @@ target_link_libraries(
     drivers_gtest
     lib
     lib_gtest
+    peripheral
+    peripheral_gtest
     ui
     ui_gtest
     Qt5::Core

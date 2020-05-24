@@ -1,7 +1,7 @@
 #include "comlinedevice.h"
 
 ComlineDevice::ComlineDevice()
-    : IDataLink()
+    : IDataLink<QString>()
     , m_baudRate(2400)
 {
 }

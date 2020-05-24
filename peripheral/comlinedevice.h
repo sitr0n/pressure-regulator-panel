@@ -1,17 +1,21 @@
 #ifndef COMLINEDEVICE_H
 #define COMLINEDEVICE_H
 
-#include "idatalink.h"
+#include "../peripheral/idatalink.h"
 //#include "commline.h"
 #include <vector>
+#include <QString>
 
-class ComlineDevice : public IDataLink
+class ComlineDevice : public IDataLink<QString>
 {
 public:
     ComlineDevice();
     bool connect(const QString &address);
+
     void close();
+
     bool write(const QString &message);
+
     QString read();
 
     void setBaud(const int rate);

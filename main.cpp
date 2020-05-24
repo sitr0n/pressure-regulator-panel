@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <memory>
-#include <drivers/comlinedevice.h>
+#include <peripheral/comlinedevice.h>
 #include <drivers/regtronic_driver.h>
 #include <ui/pressurepanel.h>
 

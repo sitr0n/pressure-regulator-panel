@@ -1,6 +1,7 @@
 add_subdirectory(drivers)
 add_subdirectory(gtest)
 add_subdirectory(lib)
+add_subdirectory(peripheral)
 add_subdirectory(ui)
 
 cmake_minimum_required(VERSION 2.8.11)
