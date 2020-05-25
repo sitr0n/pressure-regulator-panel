@@ -1,8 +1,8 @@
-#include "networkaddressform.h"
+#include "networkaddressfield.h"
 #include <QRegExp>
 
-NetworkAddressForm::NetworkAddressForm(const QString &name, QWidget *parent)
-    : SettingsTextField(name, parent)
+NetworkAddressField::NetworkAddressField(std::shared_ptr<IDataLink<QString>> storage, QWidget *parent)
+    : SettingsTextField(storage, parent)
 {
     setPlaceholderText("Enter IP Address here...");
 
@@ -11,14 +11,15 @@ NetworkAddressForm::NetworkAddressForm(const QString &name, QWidget *parent)
     });
 }
 
-void NetworkAddressForm::save()
+bool NetworkAddressField::save()
 {
     const QRegExp validator = QRegExp("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
     auto value = toPlainText();
     if (validator.exactMatch(value)) {
-        store(value);
+        return m_storage->write(value);
     } else {
         setStyleSheet("color: #FF0000");
         notify("Enter IP Addresses only!");
+        return false;
     }
 }

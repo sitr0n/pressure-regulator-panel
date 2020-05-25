@@ -1,18 +1,22 @@
 #pragma once
-#include "isettingswidget.h"
 #include <QTextEdit>
+#include "isettingswidget.h"
+#include "../peripheral/idatalink.h"
+#include <memory>
 
 class SettingsTextField : public QTextEdit, public ISettingsWidget
 {
     Q_OBJECT
 public:
-    explicit SettingsTextField(const QString &name, QWidget *parent = nullptr);
+    explicit SettingsTextField(std::shared_ptr<IDataLink<QString>> storage, QWidget *parent = nullptr);
     virtual ~SettingsTextField() = default;
 
-    virtual void save();
+    virtual bool save();
     virtual void cancel();
     virtual bool reset();
 
 protected:
     void notify(const QString &message);
+    std::shared_ptr<IDataLink<QString>> m_storage;
+
 };

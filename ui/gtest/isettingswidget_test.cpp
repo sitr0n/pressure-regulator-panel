@@ -7,21 +7,21 @@
 
 
 
-TEST(ISettingsWidget, testConstruction)
-{
-    auto widget = std::make_shared<MockSettingsWidget>("test");
-}
+//TEST(ISettingsWidget, testConstruction)
+//{
+//    auto widget = std::make_shared<MockSettingsWidget>("test");
+//}
 
-TEST(ISettingsWidget, testDefault)
-{
-    auto widget = std::make_shared<MockSettingsWidget>("test");
+//TEST(ISettingsWidget, testDefault)
+//{
+//    auto widget = std::make_shared<MockSettingsWidget>("test");
 
-    const float value = 12.3;
-    widget->setDefault(value);
-    bool valid;
-    ASSERT_EQ(widget->getDefault().toFloat(&valid), value);
-    EXPECT_TRUE(valid);
-}
+//    const float value = 12.3;
+//    widget->setDefault(value);
+//    bool valid;
+//    ASSERT_EQ(widget->getDefault().toFloat(&valid), value);
+//    EXPECT_TRUE(valid);
+//}
 
 //TEST(SettingsWidget, testSave)
 //{

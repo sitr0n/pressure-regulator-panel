@@ -4,10 +4,10 @@
 #include <gmock/gmock.h>
 
 template <typename T>
-class MockDataLinker : public IDataLink<T>
+class MockDataLink : public IDataLink<T>
 {
 public:
-    ~MockDataLinker() { }
+    ~MockDataLink() { }
     MOCK_METHOD1(connect, bool(const QString &address));
     MOCK_METHOD0(close, void());
     MOCK_METHOD1(write, bool(const T &message));

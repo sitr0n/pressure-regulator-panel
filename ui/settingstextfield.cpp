@@ -1,31 +1,36 @@
 #include "settingstextfield.h"
 #include <QToolTip>
 
-SettingsTextField::SettingsTextField(const QString &name, QWidget *parent)
+SettingsTextField::SettingsTextField(std::shared_ptr<IDataLink<QString>> storage, QWidget *parent)
     : QTextEdit(parent)
-    , ISettingsWidget(name)
+    , ISettingsWidget()
+    , m_storage(storage)
 {
     setPlaceholderText("Enter text here...");
 }
 
-void SettingsTextField::save()
+bool SettingsTextField::save()
 {
-    store(QVariant(toPlainText()));
+    auto saved = m_storage->write(toPlainText());
+    if (!saved) {
+        notify("Failed to save data");
+    }
+    return saved;
 }
 
 void SettingsTextField::cancel()
 {
-    setText(load().toString());
+    setText(m_storage->read());
 }
 
 bool SettingsTextField::reset()
 {
-    if (!getDefault().isNull()) {
-        setText(getDefault().toString());
-    } else {
-        notify("No default value found");
-    }
-    return getDefault().isNull();
+//    if (!getDefault().isNull()) {
+//        setText(getDefault().toString());
+//    } else {
+//        notify("No default value found");
+//    }
+//    return getDefault().isNull();
 }
 
 void SettingsTextField::notify(const QString &message)

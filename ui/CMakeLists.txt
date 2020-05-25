@@ -18,7 +18,8 @@ set(
     UI_SRC
     isettingswidget.cpp
     settingstextfield.cpp
-    networkaddressform.cpp
+    networkaddressfield.cpp
+    settingsform.cpp
 
     pressurepanel.cpp
 )
@@ -27,7 +28,8 @@ set(
     UI_H
     isettingswidget.h
     settingstextfield.h
-    networkaddressform.h
+    networkaddressfield.h
+    settingsform.h
 
     pressurepanel.h
 )
@@ -36,6 +38,8 @@ include_directories(
     ${CURRENT_SOURCE_DIR}/../
     ${CURRENT_SOURCE_DIR}/../drivers
     ${CURRENT_SOURCE_DIR}/../drivers/gtest
+    ${CURRENT_SOURCE_DIR}/../peripheral
+    ${CURRENT_SOURCE_DIR}/../peripheral/gtest
 )
 
 qt5_wrap_cpp(UI_QT_HEADERS_MOC ${UI_H})
@@ -49,6 +53,7 @@ add_library(
 target_link_libraries(
     ui
     drivers
+    peripheral
     Qt5::Core
     Qt5::Widgets
 )

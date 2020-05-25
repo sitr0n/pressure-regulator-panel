@@ -18,7 +18,8 @@ set(
     UI_GTEST_SRC
     isettingswidget_test.cpp
     settingstextfield_test.cpp
-    networkaddressform_test.cpp
+    networkaddressfield_test.cpp
+    settingsform_test.cpp
 
     pressurepanel_test.cpp
 )
@@ -32,9 +33,13 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}..
     ${CMAKE_CURRENT_SOURCE_DIR}drivers
     ${CMAKE_CURRENT_SOURCE_DIR}drivers/gtest
+    ${CMAKE_CURRENT_SOURCE_DIR}peripheral
+    ${CMAKE_CURRENT_SOURCE_DIR}peripheral/gtest
     ${CURRENT_SOURCE_DIR}../
     ${CURRENT_SOURCE_DIR}../drivers
     ${CURRENT_SOURCE_DIR}../drivers/gtest
+    ${CURRENT_SOURCE_DIR}../peripheral
+    ${CURRENT_SOURCE_DIR}../peripheral/gtest
 )
 
 add_library(
@@ -54,6 +59,8 @@ target_link_libraries(
     ui
     drivers_gtest
     drivers
+    peripheral_gtest
+    peripheral
     gtest_main
     gmock
     Qt5::Core
